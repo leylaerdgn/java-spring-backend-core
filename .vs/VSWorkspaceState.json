@@ -1,0 +1,19 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\main",
+    "\\src\\main\\java",
+    "\\src\\main\\java\\com",
+    "\\src\\main\\java\\com\\leyla",
+    "\\src\\main\\java\\com\\leyla\\spring_demo",
+    "\\src\\main\\resources",
+    "\\src\\test",
+    "\\src\\test\\java",
+    "\\src\\test\\java\\com",
+    "\\src\\test\\java\\com\\leyla",
+    "\\src\\test\\java\\com\\leyla\\spring_demo"
+  ],
+  "SelectedNode": "\\src\\main\\java\\com\\leyla\\spring_demo\\SpringDemoApplication.java",
+  "PreviewInSolutionExplorer": false
+}
