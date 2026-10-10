@@ -1,8 +1,13 @@
 package com.leyla.spring_demo;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,11 +18,39 @@ public class UserController{
           this._userService=userService;
      }
     @GetMapping("/users")
-    public List<User> getUser(){
-        return _userService.getUser();
+    ResponseEntity<List<User>> getUser(){
+        return new ResponseEntity<>(_userService.getUser(), HttpStatus.OK);
     }
     @PostMapping("/users")
-    public void setUser(@RequestBody User user){
+    ResponseEntity<List<User>> setUser(@RequestBody User user){
          _userService.setUser(user);
+         return new ResponseEntity<>(_userService.getUser(),HttpStatus.CREATED);
     }
-}
+    @GetMapping("/users/{id}")
+    ResponseEntity<User> oneUser(@PathVariable Long id){
+        if((_userService.searchId(id) != null)){
+            return new ResponseEntity<User>(_userService.searchId(id) ,HttpStatus.OK);
+
+        }else{
+            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @DeleteMapping("/users/{id}")
+    ResponseEntity<Void> deleteId(@PathVariable Long id){
+        if(_userService.deleteId(id)!= false){
+              return ResponseEntity.noContent().build();
+        }else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @PutMapping("/users/{id}")
+    ResponseEntity<User> putId(@PathVariable Long id, @RequestBody User user){
+        if(_userService.putUser(id,user) != null){
+            return new ResponseEntity<User>(_userService.searchId(id),HttpStatus.OK);
+        }else{
+            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+        }
+        
+    }
+
+    }
