@@ -45,8 +45,9 @@ public class UserController{
     }
     @PutMapping("/users/{id}")
     ResponseEntity<User> putId(@PathVariable Long id, @RequestBody User user){
-        if(_userService.putUser(id,user) != null){
-            return new ResponseEntity<User>(_userService.searchId(id),HttpStatus.OK);
+      User updated = _userService.putUser(id, user);
+        if (updated != null) {
+            return new ResponseEntity<User>(updated, HttpStatus.OK);
         }else{
             return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
         }

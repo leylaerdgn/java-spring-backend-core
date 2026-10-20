@@ -6,44 +6,39 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-    private List<User> users = new ArrayList();
+  private UserRepository _userRepository;
 
-    public List<User> getUser(){
-        return users;
-    }
-    
-    public void setUser(User user){
-        users.add(user);
-    }
+  public UserService(UserRepository userRepository){
+    this._userRepository=userRepository;
+  }
+   public List<User> getUser(){
+    return _userRepository.findAll();
+   }
+
+  public User setUser(User user) {
+    return _userRepository.save(user); // Hem parametre verildi hem de User döndürüldü
+}
 
     public User searchId(Long id){
-    for(User u: users){
-     if(u.getId().equals(id)){
-        return u;
-     }
-    }
-        return null;
+        return _userRepository.findById(id).orElse(null);
     }
 
     public boolean deleteId(Long id){
-     for(User u: users){
-          if(u.getId().equals(id)){
-            return users.remove(u);
-          }
-             }
-             return false;
-
+       if(_userRepository.existsById(id)){
+        _userRepository.deleteById(id);
+        return true;
+       }
+       return false;
     }
 
-    public User putUser(Long id, User updatedUser){
-        for(User u: users){
-            if(u.getId().equals(id)){
-               u.setName(updatedUser.getName());
-               return u;
-            }
+     public User putUser(Long id, User updatedUser){
+        User user = _userRepository.findById(id).orElse(null);
+        if(user != null){
+            user.setName(updatedUser.getName());
+            return _userRepository.save(user);
         }
         return null;
     }
-    }
+}
     
 
