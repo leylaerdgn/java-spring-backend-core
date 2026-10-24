@@ -1,4 +1,5 @@
 package com.leyla.spring_demo;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -13,20 +14,34 @@ public class UserService {
     public UserService(UserRepository userRepository){
         this._userRepository = userRepository;
     }
-
-    public List<User> getUser(){
-        return _userRepository.findAll();
+ //Bu metot veritabanındaki kullanıcıları getirip postmane göndermek için kullanılıyor.
+ // Bizde veritabanındaki User nesnelerini doğrudan dışarıya göndermek yerine userResponseDTO kullanacaz.
+    public List<UserResponseDTO> getUser(){
+        List<User> users= _userRepository.findAll();
+        List<UserResponseDTO> dtoList=new ArrayList<>();
+        for(User u: users){
+           dtoList.add(new UserResponseDTO(u.getId(), u.getName()));
+        }
+        return dtoList;
     }
 
-    public UserResponseDTO setUser(UserRequestDTO requestDTO) {
-        User user = new User();
+    //Postman'den gönderdiğimiz kullanıcı bilgilerini alıp veritabanına kaydeder 
+    // ve kaydedilen kullanıcının ID'sini ve adını DTO aracılığıyla Postman'e geri gönderir.
+    //Yeni kullanıcı eklemek için yazılmıştır
+    public UserResponseDTO createUser(UserRequestDTO requestDTO) {
+        User user = new User(); //Postmanden yeni bir kullanıcı geldiği için onu veritabanına kaydetmek için User nesnesi oluşturuyoruz.
         user.setName(requestDTO.getName());
         User savedUser = _userRepository.save(user);
-        return new UserResponseDTO(savedUser.getId(), savedUser.getName()); 
+        return new UserResponseDTO(savedUser.getId(), savedUser.getName()); //ile kaydedilen kullanıcının ID'sini ve adını Postman'e döndürmek üzere DTO oluşturuyoruz.
        }
 
-    public User searchId(Long id){
-        return _userRepository.findById(id).orElse(null);
+    public UserResponseDTO searchId(Long id){
+        User user= _userRepository.findById(id).orElse(null);
+        if(user != null){
+            return new UserResponseDTO(user.getId(), user.getName()); //buradaki new elimdeki user nesnensini dto'ya dönüştürmeme yarıyor.
+        }else{
+            return null;
+        }
     }
 
     public boolean deleteId(Long id){
@@ -38,12 +53,13 @@ public class UserService {
         }
 
     }
-
-    public User putUser(Long id, User updatedUser){
+//Postman'den gelen yeni bilgileri alıp veritabanındaki mevcut kullanıcının üzerine yazar ve güncellenmiş halini Postman'e geri döner.
+    public UserResponseDTO putUser(Long id, UserRequestDTO userDto){
         User user= _userRepository.findById(id).orElse(null);
         if(user!=null){
-            user.setName(updatedUser.getName());
-            return _userRepository.save(user);
+             user.setName(userDto.getName()); //Yeni bilgi nereden geliyor? (KAYNAK) -> Postman'den gelen DTO'dan! Yani userDto.getName()
+             User saveUser=_userRepository.save(user);  
+             return new UserResponseDTO(saveUser.getId(), saveUser.getName());                                                            //Ben bu yeni bilgiyi nereye yapıştırmak istiyorum? (HEDEF) -> Veritabanındaki user nesnesinin içine! Yani user.setName(...)
         }          
         return null;
     }

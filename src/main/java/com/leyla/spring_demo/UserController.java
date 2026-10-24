@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import com.leyla.spring_demo.DTO.UserRequestDTO;
+import com.leyla.spring_demo.DTO.UserResponseDTO;
 
 @RestController
 public class UserController{
@@ -18,21 +20,21 @@ public class UserController{
           this._userService=userService;
      }
     @GetMapping("/users")
-    ResponseEntity<List<User>> getUser(){
+    ResponseEntity<List<UserResponseDTO>> getUser(){
         return new ResponseEntity<>(_userService.getUser(), HttpStatus.OK);
     }
     @PostMapping("/users")
-    ResponseEntity<List<User>> setUser(@RequestBody User user){
-         _userService.setUser(user);
-         return new ResponseEntity<>(_userService.getUser(),HttpStatus.CREATED);
+    ResponseEntity<UserResponseDTO> setUser(@RequestBody UserRequestDTO user){
+         UserResponseDTO created = _userService.createUser(user);
+         return new ResponseEntity<>(created,HttpStatus.CREATED);
     }
     @GetMapping("/users/{id}")
-    ResponseEntity<User> oneUser(@PathVariable Long id){
+    ResponseEntity<UserResponseDTO> oneUser(@PathVariable Long id){
         if((_userService.searchId(id) != null)){
-            return new ResponseEntity<User>(_userService.searchId(id) ,HttpStatus.OK);
+            return new ResponseEntity<UserResponseDTO>(_userService.searchId(id) ,HttpStatus.OK);
 
         }else{
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<UserResponseDTO>(HttpStatus.NOT_FOUND);
         }
     }
     @DeleteMapping("/users/{id}")
@@ -44,12 +46,12 @@ public class UserController{
         }
     }
     @PutMapping("/users/{id}")
-    ResponseEntity<User> putId(@PathVariable Long id, @RequestBody User user){
-      User updated = _userService.putUser(id, user);
+    ResponseEntity<UserResponseDTO> putId(@PathVariable Long id, @RequestBody UserRequestDTO user){
+      UserResponseDTO updated = _userService.putUser(id, user);
         if (updated != null) {
-            return new ResponseEntity<User>(updated, HttpStatus.OK);
+            return new ResponseEntity<UserResponseDTO>(updated, HttpStatus.OK);
         }else{
-            return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<UserResponseDTO>(HttpStatus.NOT_FOUND);
         }
         
     }
