@@ -30,12 +30,7 @@ public class UserController{
     }
     @GetMapping("/users/{id}")
     ResponseEntity<UserResponseDTO> oneUser(@PathVariable Long id){
-        if((_userService.searchId(id) != null)){
-            return new ResponseEntity<UserResponseDTO>(_userService.searchId(id) ,HttpStatus.OK);
-
-        }else{
-            return new ResponseEntity<UserResponseDTO>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(_userService.searchId(id), HttpStatus.OK);
     }
     @DeleteMapping("/users/{id}")
     ResponseEntity<Void> deleteId(@PathVariable Long id){

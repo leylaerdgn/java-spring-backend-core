@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.leyla.spring_demo.DTO.UserRequestDTO;
 import com.leyla.spring_demo.DTO.UserResponseDTO;
+import com.leyla.spring_demo.exception.UserNotFoundException;
 
 @Service
 public class UserService {
@@ -40,7 +41,7 @@ public class UserService {
         if(user != null){
             return new UserResponseDTO(user.getId(), user.getName()); //buradaki new elimdeki user nesnensini dto'ya dönüştürmeme yarıyor.
         }else{
-            return null;
+         throw new UserNotFoundException("Kullanıcı Bulunamadı.");
         }
     }
 
