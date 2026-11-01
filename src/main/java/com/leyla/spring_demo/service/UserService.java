@@ -1,9 +1,11 @@
-package com.leyla.spring_demo;
+package com.leyla.spring_demo.service;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.leyla.spring_demo.User;
+import com.leyla.spring_demo.UserRepository;
 import com.leyla.spring_demo.DTO.UserRequestDTO;
 import com.leyla.spring_demo.DTO.UserResponseDTO;
 import com.leyla.spring_demo.exception.UserNotFoundException;
