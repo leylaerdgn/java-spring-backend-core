@@ -1,13 +1,21 @@
 package com.leyla.spring_demo;
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name="users")
 public class User {
+    @OneToMany(mappedBy="user")
+    private List<Note> notes=new ArrayList<Note>();
+
+
     private String name;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +25,12 @@ public class User {
     public User(String name, Long id){
         this.name=name;
         this.id=id;
+    }
+    public List<Note> getNotes() {
+        return notes;
+    }
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
     }
     public String getName(){
         return name;
